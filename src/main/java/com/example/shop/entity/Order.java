@@ -27,7 +27,7 @@ public class Order {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "    ")
+    @Column(name = "address")
     private String address;
     @Column(name = "phone")
     private String phone;
@@ -35,15 +35,7 @@ public class Order {
     private Timestamp createDate;
 
     @ManyToOne
-	@JoinColumn(name="userId", referencedColumnName ="id")
-	@JsonIgnoreProperties(value= {"aplications","hibernateLazyInitializer"})
-	private Users user;
+    @JoinColumn(name = "userId", referencedColumnName = "id")
+    @JsonIgnoreProperties(value = { "aplications", "hibernateLazyInitializer" })
+    private Users user;
 }
-// go
-// create table order (
-// productID int,
-// nameProduct varchar(255),
-// quantity INT,
-// saled INT,
-// City varchar(255)
-// )

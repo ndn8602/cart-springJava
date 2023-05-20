@@ -1,9 +1,17 @@
 package com.example.shop.service;
 
-import com.example.shop.dto.CartDto;
+import org.springframework.stereotype.Service;
+
 import com.example.shop.entity.Users;
+import com.example.shop.dto.CartDto;
 
-public interface cartService {
-    CartDto updateCart(CartDto cart, Long productId, Integer quantity);
+@Service
+public interface CartService {
+    CartDto updateCart(CartDto cart, Long productId, Integer quantity, boolean isReplace);
 
+    Integer getTotalQuantity(CartDto cart);
+
+    Double getTotalPrice(CartDto cart);
+
+    void insert(CartDto cartDto, Users user, String address, String phone) throws Exception;
 }

@@ -1,6 +1,7 @@
 package com.example.shop.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.print.attribute.standard.PagesPerMinute;
 
@@ -44,10 +45,10 @@ public class productServiceImpl implements productService {
     }
 
     @Override
-	public Page<Products> findAll(Pageable pageable) {
-		// TODO Auto-generated method stub
-		return productRepo.findAllAvailable(pageable);
-	}
+    public Page<Products> findAll(Pageable pageable) {
+        // TODO Auto-generated method stub
+        return productRepo.findAllAvailable(pageable);
+    }
 
     @Override
     public Page<Products> findByKeyWords(String string, Pageable pageable) {
@@ -57,8 +58,8 @@ public class productServiceImpl implements productService {
 
     @Override
     public Products findById(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findById'");
+        Optional<Products> result = productRepo.findById(id); // ->select * from products where id=id
+        return result.isPresent() ? result.get() : null;
     }
 
     @Override

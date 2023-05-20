@@ -136,13 +136,4 @@ public class HomeController {
         return "home";
     }
 
-    @GetMapping("/cart")
-    public String cart() {
-        return "cart";
-    }
-    @PostMapping("/buy")
-	public List<Products> PostProduct(@ModelAttribute Products ok){
-		System.out.println(ok);
-		return null;
-	}
 }

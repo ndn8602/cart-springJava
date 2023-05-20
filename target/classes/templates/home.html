@@ -57,12 +57,19 @@
                 <div
                   class="card-footer d-flex align-items-end pt-3 px-0 pb-0 mt-auto"
                 >
-                  <a
-                    href="#!"
-                    class="btn btn-primary shadow-0 me-1"
-                    th:attr="onclick='addToCart(\''+*{product.id}+ '\')'"
-                    >Add to cart</a
-                  >
+                  <
+                  <div class="product-option-shop">
+                    <button
+                      class="add_to_cart_button"
+                      data-quantity="1"
+                      data-product_sku=""
+                      data-product_id="70"
+                      rel="nofollow"
+                      th:attr="onclick='addToCart(\''+${product.id}+ '\')'"
+                    >
+                      Add to cart
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -70,5 +77,31 @@
         </div>
       </div>
     </section>
+    <script>
+      function addToCart(productId) {
+        console.log("Da them");
+        var endpoint =
+          "/api/cart/update?productId=" +
+          productId +
+          "&quantity=1&isReplace=false";
+        $.ajax({
+          url: endpoint,
+          type: "GET",
+          dataType: "json",
+          success: function (data) {
+            alert("Product was added successfuly");
+            $("#headerTotalPrice").text(numberWithDot(data.totalPrice));
+            $("#headerTotalQuantity").text(data.totalQuantity);
+          },
+          error: function (error) {
+            console.log(error);
+          },
+        });
+      }
+
+      function numberWithDot(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " đ";
+      }
+    </script>
   </body>
 </html>

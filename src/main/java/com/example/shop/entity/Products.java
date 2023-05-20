@@ -31,7 +31,7 @@ public class Products {
     @Column(name = "imgUrl")
     private String imgUrl;// beff
     @Column(name = "quantity")
-    private Long quantity;// 1000
+    private Integer quantity;// 1000
     @Column(name = "price")
     private Double price; // 100
     @Column(name = "category")

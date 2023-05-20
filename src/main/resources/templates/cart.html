@@ -1,9 +1,5 @@
 <!DOCTYPE html>
-<html
-  lang="en"
-  xmlns:th="http://www.thymeleaf.org"
-  th:replace="base::layout(~{::section})"
->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
   <!-- th:replace="base::layout(~{::section})" -->
 
   <head>
@@ -236,18 +232,14 @@
       </div>
     </div>
     <!-- Filter -->
-    <div th:replace="${content}"></div>
+    <!-- <div th:replace="${content}"></div> -->
     <!-- Footer -->
     <footer
       class="text-center text-lg-start text-muted mt-3"
       style="background-color: #f5f5f5"
     >
       <!-- Section: Links  -->
-      <section
-        class="h-100 h-custom"
-        style="background-color: #d2c9ff"
-        id="cart"
-      >
+      <section class="h-100 h-custom" style="background-color: #d2c9ff">
         <div class="container py-5 h-100">
           <div
             class="row d-flex justify-content-center align-items-center h-100"
@@ -260,17 +252,76 @@
                 <div class="card-body p-0">
                   <div class="row g-0">
                     <div class="col-lg-8">
-                      <div class="p-5">
+                      <div class="p-5" id="viewCartFragment">
                         <div
                           class="d-flex justify-content-between align-items-center mb-5"
                         >
                           <h1 class="fw-bold mb-0 text-black">Shopping Cart</h1>
-                          <h6 class="mb-0 text-muted"></h6>
+                          <h6 class="mb-0 text-muted">3 items</h6>
                         </div>
 
                         <hr class="my-4" />
 
-                        <section id="renderItem"></section>
+                        <div
+                          class="row mb-4 d-flex justify-content-between align-items-center"
+                          th:each="detail, i : ${session.currentCart?.details}"
+                        >
+                          <div class="col-md-2 col-lg-2 col-xl-2">
+                            <img
+                              th:src="@{|img/${product.imgUrl}|}"
+                              class="img-fluid rounded-3"
+                              alt="Cotton T-shirt"
+                            />
+                          </div>
+                          <div class="col-md-3 col-lg-3 col-xl-3">
+                            <h6
+                              class="text-black mb-0"
+                              th:text="${detail.value.name}"
+                            ></h6>
+                          </div>
+                          <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
+                            <button
+                              class="btn btn-link px-2"
+                              onclick="this.parentNode.querySelector('input[type=number]').stepDown()"
+                            >
+                              <i class="fas fa-minus"></i>
+                            </button>
+
+                            <input
+                              type="number"
+                              class="input-text qty text"
+                              title="Qty"
+                              min="1"
+                              value="1"
+                              th:value="${detail.value.quantity}"
+                              th:id="quantity + ${detail.key}"
+                              th:attr="onchange='updateQuantity(\'' + ${detail.key} + '\')'"
+                            />
+
+                            <button
+                              class="btn btn-link px-2"
+                              onclick="this.parentNode.querySelector('input[type=number]').stepUp()"
+                            >
+                              <i class="fas fa-plus"></i>
+                            </button>
+                          </div>
+                          <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
+                            <h6
+                              class="mb-0 amount"
+                              th:text="${#numbers.formatCurrency(detail.value.price)}"
+                            ></h6>
+                          </div>
+                          <div class="col-md-1 col-lg-1 col-xl-1 text-end">
+                            <a
+                              href="#!"
+                              class="text-muted remove"
+                              th:attr="onclick='removeProduct(\'' + ${detail.key} + '\')'"
+                              ><i class="fas fa-times"></i
+                            ></a>
+                          </div>
+                        </div>
+
+                        <hr class="my-4" />
 
                         <div class="pt-5">
                           <h6 class="mb-0">
@@ -442,5 +493,79 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
     -->
+    <script>
+      function removeProduct(productId) {
+        var url =
+          "/cart/update?productId=" + productId + "&quantity=0&isReplace=true";
+        $.get(url).done(function (data) {
+          $("#viewCartFragment").replaceWith(data);
+          callApiRefreshCart();
+        });
+      }
+
+      function updateQuantity(productId) {
+        var idInput = "#quantity" + productId;
+        var newQuantity = $(idInput).val();
+        var url =
+          "/cart/update?productId=" +
+          productId +
+          "&quantity=" +
+          newQuantity +
+          "&isReplace=true";
+        $.get(url).done(function (data) {
+          $("#viewCartFragment").replaceWith(data);
+          callApiRefreshCart();
+        });
+      }
+
+      function callApiRefreshCart() {
+        var url = "/api/cart/refresh";
+        $.ajax({
+          url: url,
+          type: "GET",
+          dataType: "json",
+          success: function (data) {
+            $("#headerTotalPrice").text(formatCurrency(data.totalPrice));
+            $("#headerTotalQuantity").text(data.totalQuantity);
+          },
+          error: function (error) {
+            alert(error);
+          },
+        });
+      }
+
+      function checkout() {
+        var address = $("#address").val();
+        var phone = $("#phone_number").val();
+        var url = "/api/cart/checkout?address=" + address + "&phone=" + phone;
+        $.ajax({
+          url: url,
+          type: "GET",
+          statusCode: {
+            200: handle200,
+            400: handle400,
+            401: handle401,
+          },
+        });
+      }
+
+      function handle200() {
+        alert("Your payment was created successfully");
+        window.location.href = "/index";
+      }
+
+      function handle400() {
+        alert("Checkout failed, please try again");
+      }
+
+      function handle401() {
+        alert("Please login before paying");
+        window.location.href = "/login";
+      }
+
+      function formatCurrency(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " ₫";
+      }
+    </script>
   </body>
 </html>
