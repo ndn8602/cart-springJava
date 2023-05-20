@@ -18,24 +18,25 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import com.example.shop.entity.ProductTypes;
 import com.example.shop.entity.Products;
 import com.example.shop.service.SessionService;
-import com.example.shop.service.productService;
+import com.example.shop.service.ProductService;
 import com.example.shop.entity.Users;
 import com.example.shop.service.*;
 
-import jakarta.servlet.http.HttpSession;;
 
 @Controller
 public class HomeController {
     @Autowired
     userService usersService;
     @Autowired
-    productService productsService;
+    ProductService productsService;
     @Autowired
     ProductTypeService productTypeService;
     @Autowired
@@ -64,7 +65,8 @@ public class HomeController {
     }
 
     @GetMapping("/login")
-    public String login() {
+    public String login(Model model) {
+    	model.addAttribute("userRequest", new Users());
         return "login";
     }
 
@@ -72,7 +74,6 @@ public class HomeController {
     public String doPostLogin(@ModelAttribute Users userRequest,
             HttpSession session) {
         try {
-            userRequest.setFullname("");
             Users userResponse = usersService.doLogin(userRequest);
             if (!ObjectUtils.isEmpty(userResponse)) {
                 session.setAttribute("user", userResponse);

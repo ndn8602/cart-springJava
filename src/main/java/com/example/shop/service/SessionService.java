@@ -3,10 +3,12 @@ package com.example.shop.service;
 
 
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import jakarta.servlet.http.HttpSession;
+
 
 @Service
 public class SessionService {

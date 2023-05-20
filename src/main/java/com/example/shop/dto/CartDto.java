@@ -13,7 +13,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CartDto   {
 
-
 	private Long orderId;
 	private String address;
 	private String phone;

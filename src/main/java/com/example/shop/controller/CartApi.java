@@ -1,5 +1,7 @@
 package com.example.shop.controller;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,7 +16,8 @@ import com.example.shop.entity.Users;
 import com.example.shop.service.CartService;
 import com.example.shop.service.SessionUtil;
 
-import jakarta.servlet.http.HttpSession;
+
+@RestController
 @RequestMapping("api/cart")
 public class CartApi {
 
@@ -41,23 +44,23 @@ public class CartApi {
 	}
 
 	// api/cart/checkout?address=...&phone=...
+	
+
 	@GetMapping("/checkout")
-	public ResponseEntity<?> doGetCheckout(@RequestParam("address") String address,
-			@RequestParam("phone") String phone,
+	public ResponseEntity<?> doGetCheckout(@RequestParam("address") String address, @RequestParam("phone") String phone,
 			HttpSession session) {
 		Users currentUser = SessionUtil.getCurrentUser(session);
-
 		if (ObjectUtils.isEmpty(currentUser)) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
-
 		CartDto currentCart = SessionUtil.getCurrentCart(session);
 		try {
-			cartService.insert(currentCart, currentUser, address, phone);
+			cartService.insert(currentUser,currentCart,phone, address);
 			session.setAttribute("currentCart", new CartDto());
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception ex) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);// 400
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
+
 	}
 }

@@ -2,6 +2,8 @@ package com.example.shop.service.impl;
 
 import java.util.HashMap;
 
+import javax.transaction.Transactional;
+
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +17,12 @@ import com.example.shop.entity.Users;
 import com.example.shop.service.OrderService;
 import com.example.shop.service.CartService;
 import com.example.shop.service.OrderDetailService;
-import com.example.shop.service.productService;
+import com.example.shop.service.ProductService;
 
-import jakarta.transaction.Transactional;
 @Service
 public class CartServiceImpl implements CartService {
 	@Autowired
-	private productService productService;
+	private ProductService productService;
 
 	@Autowired
 	private OrderService orderService;
@@ -94,27 +95,30 @@ public class CartServiceImpl implements CartService {
 		return cartDetailDto;
 	}
 
-	@Transactional(rollbackOn = { Exception.class, Throwable.class })
+	@Transactional(rollbackOn = { Exception.class })
 	@Override
-	// thao tac toi 3 bang: order,order_details,product
-	public void insert(CartDto cartDto, Users user, String address, String phone) throws Exception {
+	public void insert(Users user, CartDto cartDto, String address, String phone) throws Exception {
+
 		if (StringUtils.isAnyEmpty(address, phone)) {
 			throw new Exception("Address or phone must be not null or empty or whitespace ");
 		}
 
-		// insert vao bang Orders
+		// insert vao bang order
 		Order order = new Order();
 		order.setUser(user);
-		order.setAddress(address);
+
 		order.setPhone(phone);
+		order.setAddress(address);
 
 		Order orderResponse = orderService.insert(order);
 
 		if (ObjectUtils.isEmpty(orderResponse)) {
-			throw new Exception("Insert into order table failed");
+			throw new Exception("Insert into order table false");
+		}
+		if (cartDto.getTotalQuantity() == 0) {
+			throw new Exception("Insert into order table false");
 		}
 
-		// inset vao bang order_details
 		for (CartDetailDto cartDetailDto : cartDto.getDetails().values()) {
 
 			Products product = productService.findById(cartDetailDto.getProductId());
@@ -125,6 +129,8 @@ public class CartServiceImpl implements CartService {
 				// update new quantity cho bang product
 				Integer newQuantity = product.getQuantity() - cartDetailDto.getQuantity();
 				productService.updateQuantity(newQuantity, product.getId());
+			} else {
+				throw new Exception("Order quantity must be less than curent product quạntity");
 			}
 
 		}
@@ -133,4 +139,5 @@ public class CartServiceImpl implements CartService {
 	private boolean checkQuantity(Products product, CartDetailDto cartDetail) {
 		return product.getQuantity() >= cartDetail.getQuantity();
 	}
+
 }

@@ -3,8 +3,6 @@ package com.example.shop.service.impl;
 import java.util.List;
 import java.util.Optional;
 
-import javax.print.attribute.standard.PagesPerMinute;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,10 +11,12 @@ import org.springframework.stereotype.Service;
 
 import com.example.shop.entity.Products;
 import com.example.shop.repository.ProductRepo;
-import com.example.shop.service.productService;
+import com.example.shop.service.ProductService;
+
+
 
 @Service
-public class productServiceImpl implements productService {
+public class ProductServiceImpl implements ProductService {
     @Autowired
     ProductRepo productRepo;
 
@@ -69,8 +69,8 @@ public class productServiceImpl implements productService {
 
     @Override
     public void updateQuantity(Integer newQuantity, Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateQuantity'");
+    	productRepo.updateQuantity(newQuantity, id);
+        
     }
 
 }

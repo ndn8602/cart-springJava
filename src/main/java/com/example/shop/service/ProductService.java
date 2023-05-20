@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import com.example.shop.entity.Products;
 
 @Service
-public interface productService {
+public interface ProductService {
 
     List<Products> findAll();
 

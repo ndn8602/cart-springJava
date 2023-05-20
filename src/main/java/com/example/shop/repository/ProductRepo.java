@@ -44,7 +44,7 @@ public interface ProductRepo extends JpaRepository<Products, Long> {
     // Cập nhật lại số lượng
     @Modifying(clearAutomatically = true)
     @Query(value = "UPDATE products SET quantity=?1 WHERE id=?2", nativeQuery = true)
-    void updateQuantity(Integer newquantity, Integer id);
+    void updateQuantity(Integer newquantity, Long id);
     
     @Query("SELECT p FROM Products p WHERE p.productType.description LIKE ?1 and p.quantity > 0 ")
     Page<Products> findByProductTypeDescription(String integer, Pageable pageable);

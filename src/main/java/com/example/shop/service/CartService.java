@@ -13,5 +13,5 @@ public interface CartService {
 
     Double getTotalPrice(CartDto cart);
 
-    void insert(CartDto cartDto, Users user, String address, String phone) throws Exception;
+    void insert(Users user,CartDto cartDto,  String address, String phone) throws Exception;
 }
