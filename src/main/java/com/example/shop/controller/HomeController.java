@@ -48,7 +48,7 @@ public class HomeController {
         List<ProductTypes> productTypes = new ArrayList<>();
         try {
             Page<ProductTypes> pageProductsType = productTypeService.findAll(2, page);
-            Page<Products> pageProducts = productsService.findAll(6, page);
+            Page<Products> pageProducts = productsService.findAllAvailable(6, page);
             products = pageProducts.getContent();
             productTypes = pageProductsType.getContent();
             System.out.println("type " + productTypes.get(0).getDescription());

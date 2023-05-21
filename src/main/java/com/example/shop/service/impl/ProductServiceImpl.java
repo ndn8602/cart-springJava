@@ -26,7 +26,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<Products> findAll(int pageSize, int pageNumber) throws Exception {
+    public Page<Products> findAllAvailable(int pageSize, int pageNumber) throws Exception {
         if (pageNumber >= 1) {
             return productRepo.findAllAvailable(PageRequest.of(pageNumber, pageSize));
         } else {

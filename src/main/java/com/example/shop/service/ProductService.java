@@ -13,7 +13,7 @@ public interface ProductService {
 
     List<Products> findAll();
 
-    Page<Products> findAll(int pageSize, int pageNumber) throws Exception;
+    Page<Products> findAllAvailable(int pageSize, int pageNumber) throws Exception;
     Page<Products> findAll(Pageable pageable);
     Products findById(Long id);
 
