@@ -1,19 +1,21 @@
 package com.example.shop.service;
 
+import javax.servlet.http.HttpSession;
+
 import com.example.shop.dto.CartDto;
 import com.example.shop.entity.Users;
 
-import jakarta.servlet.http.HttpSession;
+
 
 public class SessionUtil {
 	
 	private  SessionUtil() {}
 
 	public static CartDto getCurrentCart(HttpSession session) {
-		return (CartDto) session.getAttribute(SessionConstant.CURRENT_CART);
+		return (CartDto) session.getAttribute("currentCart");
 	}
 	
 	public static Users getCurrentUser(HttpSession session) {
-		return (Users) session.getAttribute(SessionConstant.CURRENT_USER);
+		return (Users) session.getAttribute("user");
 	}
 }

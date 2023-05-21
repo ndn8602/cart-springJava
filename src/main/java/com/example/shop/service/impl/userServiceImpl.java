@@ -2,6 +2,8 @@ package com.example.shop.service.impl;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,7 +11,6 @@ import com.example.shop.entity.Users;
 import com.example.shop.repository.UserRepo;
 import com.example.shop.service.userService;
 
-import jakarta.transaction.Transactional;
 
 @Service
 public class userServiceImpl implements userService {

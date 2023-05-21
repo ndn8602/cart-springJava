@@ -1,5 +1,7 @@
 package com.example.shop.controller;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -11,7 +13,6 @@ import com.example.shop.dto.CartDto;
 import com.example.shop.service.CartService;
 import com.example.shop.service.SessionUtil;
 
-import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/cart")
